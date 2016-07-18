@@ -36,25 +36,34 @@ The total steps by day
 
 ```{r fig.height=4}
 #total
-ggplot(sumByDay, aes(x=sumByDay$date, y=sumByDay$total_steps), width=sumByDay$length) +
-  geom_bar(aes(fill=sumByDay$total_steps), stat="identity", position="identity") + 
-  xlab('') + ylab('Total steps') 
+hist(sumByDay$total_steps, 
+    main = 'Total Steps Per Day',
+    xlab = 'Steps Per Day Totals',
+    ylab = 'Frequency',
+    col = 'blue',
+    las = 1)
 ```
 
 The mean steps by day
 
 ```{r fig.height=4}
-ggplot(sumByDay, aes(x=sumByDay$date, y=sumByDay$mean_steps), width=sumByDay$length) +
-  geom_bar(aes(fill=sumByDay$mean_steps), stat="identity", position="identity") + 
-  xlab('') + ylab('Mean of steps') 
+hist(sumByDay$mean_steps, 
+    main = 'Mean Steps Per Day',
+    xlab = 'Mean Steps Per Day',
+    ylab = 'Frequency',
+    col = 'blue',
+    las = 1)
 ```
 
 The median steps by day
 
 ```{r fig.height=4}
-ggplot(sumByDay, aes(x=sumByDay$date, y=sumByDay$median_steps), width=sumByDay$length) +
-  geom_bar(aes(fill=sumByDay$median_steps), stat="identity", position="identity") + 
-  xlab('') + ylab('Mean of steps') 
+hist(sumByDay$median_steps, 
+    main = 'Median Steps Per Day',
+    xlab = 'Median Steps Per Day',
+    ylab = 'Frequency',
+    col = 'blue',
+    las = 1)
 ```
 
 
@@ -122,9 +131,12 @@ Histogram:
 #histogram
 sumByDay2 <- finalData %>% group_by(date) %>% summarize(total_steps=sum(steps), mean_steps=mean(steps), median_steps=median(steps[steps>0]))
 
-ggplot(sumByDay2, aes(x=sumByDay2$date, y=sumByDay2$total_steps), width=sumByDay2$length) +
-  geom_bar(aes(fill=sumByDay2$total_steps), stat="identity", position="identity") + 
-  xlab('') + ylab('Mean steps') 
+hist(sumByDay2$total_steps, 
+    main = 'Total Steps Per Day',
+    xlab = 'Steps Per Day Totals',
+    ylab = 'Frequency',
+    col = 'blue',
+    las = 1)
 ```
 
 Comparison before and after imputing data (all data with imputed values vs raw data without NAs):
