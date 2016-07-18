@@ -126,11 +126,11 @@ Maximum steps in an interval
 
 
 ```
-## Source: local data frame [1 x 2]
+## Source: local data frame [1 x 3]
 ## 
-##   interval total_steps
-##      (int)       (int)
-## 1      835       10927
+##   interval total_steps mean_steps
+##      (int)       (int)      (dbl)
+## 1      835       10927   206.1698
 ```
 
 

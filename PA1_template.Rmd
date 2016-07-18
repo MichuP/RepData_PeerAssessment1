@@ -77,8 +77,9 @@ Maximum steps in an interval
 
 ```{r echo=FALSE}
 #max steps in time interval
-maxStepsByInterval <- filter(sumByInterval, total_steps == max(sumByInterval$total_steps))
-head(maxStepsByInterval[, 1:2])
+maxStepsByInterval <- 
+  filter(sumByInterval, total_steps == max(sumByInterval$total_steps), max_mean = max(sumByInterval$mean_steps))
+head(maxStepsByInterval[, 1:3])
 ```
 
 
