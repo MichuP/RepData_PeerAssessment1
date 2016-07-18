@@ -1,18 +1,13 @@
----
-title: 'Reproducible Research: Peer Assessment 1'
-output:
-  html_document:
-    keep_md: yes
-  pdf_document: default
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r message=FALSE, warning=FALSE}
+
+```r
 library(dplyr)
 library(ggplot2)
 library(timeDate)
-wd <- 'C:/Users/Micha³.Micha³-PC/Documents/reproducible_research/'
+wd <- 'C:/Users/MichaÅ‚.MichaÅ‚-PC/Documents/reproducible_research/'
 setwd(wd)
 
 ### LOADING AND PROCESSING DATA ###
@@ -22,69 +17,127 @@ data$date <- as.Date(data$date)
 head(data, n=10)
 ```
 
+```
+##    steps       date interval
+## 1      0 2012-10-02        0
+## 2      0 2012-10-02        5
+## 3      0 2012-10-02       10
+## 4      0 2012-10-02       15
+## 5      0 2012-10-02       20
+## 6      0 2012-10-02       25
+## 7      0 2012-10-02       30
+## 8      0 2012-10-02       35
+## 9      0 2012-10-02       40
+## 10     0 2012-10-02       45
+```
+
 
 
 ## What is mean total number of steps taken per day?
 
-```{r message=FALSE, warning=FALSE}
+
+```r
 # Constructing data - for median I'm omitting 0 as otherwise most median values for days would be 0
 sumByDay <- data %>% group_by(date) %>% summarize(total_steps=sum(steps), mean_steps=mean(steps), median_steps=median(steps[steps>0]))
 head(sumByDay)
 ```
 
+```
+## Source: local data frame [6 x 4]
+## 
+##         date total_steps mean_steps median_steps
+##       (date)       (int)      (dbl)        (dbl)
+## 1 2012-10-02         126    0.43750         63.0
+## 2 2012-10-03       11352   39.41667         61.0
+## 3 2012-10-04       12116   42.06944         56.5
+## 4 2012-10-05       13294   46.15972         66.0
+## 5 2012-10-06       15420   53.54167         67.0
+## 6 2012-10-07       11015   38.24653         52.5
+```
+
 The total steps by day
 
-```{r fig.height=4}
+
+```r
 #total
 ggplot(sumByDay, aes(x=sumByDay$date, y=sumByDay$total_steps), width=sumByDay$length) +
   geom_bar(aes(fill=sumByDay$total_steps), stat="identity", position="identity") + 
   xlab('') + ylab('Total steps') 
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
 The mean steps by day
 
-```{r fig.height=4}
+
+```r
 ggplot(sumByDay, aes(x=sumByDay$date, y=sumByDay$mean_steps), width=sumByDay$length) +
   geom_bar(aes(fill=sumByDay$mean_steps), stat="identity", position="identity") + 
   xlab('') + ylab('Mean of steps') 
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
 The median steps by day
 
-```{r fig.height=4}
+
+```r
 ggplot(sumByDay, aes(x=sumByDay$date, y=sumByDay$median_steps), width=sumByDay$length) +
   geom_bar(aes(fill=sumByDay$median_steps), stat="identity", position="identity") + 
   xlab('') + ylab('Mean of steps') 
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
 
 ## What is the average daily activity pattern?
 
-```{r}
+
+```r
 ### WHAT IS THE AVERAGE DAILY ACTIVITY PATTERN?
 
 sumByInterval <- data %>% group_by(interval) %>% summarize(total_steps=sum(steps), mean_steps=mean(steps))
 head(sumByInterval)
 ```
 
+```
+## Source: local data frame [6 x 3]
+## 
+##   interval total_steps mean_steps
+##      (int)       (int)      (dbl)
+## 1        0          91  1.7169811
+## 2        5          18  0.3396226
+## 3       10           7  0.1320755
+## 4       15           8  0.1509434
+## 5       20           4  0.0754717
+## 6       25         111  2.0943396
+```
+
 Average steps in intervals
 
-```{r}
+
+```r
 plot(sumByInterval$interval, sumByInterval$mean_steps, type = "l", ylab='Average steps by Interval', xlab='')
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+
 Maximum steps in an interval
 
-```{r echo=FALSE}
-#max steps in time interval
-maxStepsByInterval <- filter(sumByInterval, total_steps == max(sumByInterval$total_steps))
-head(maxStepsByInterval[, 1:2])
+
+```
+## Source: local data frame [1 x 2]
+## 
+##   interval total_steps
+##      (int)       (int)
+## 1      835       10927
 ```
 
 
 ## Imputing missing values
 
-```{r}
+
+```r
 ### IMPUTING MISSING VALUES ###
 cleanData <- filter(rawData, complete.cases(rawData))
 
@@ -94,8 +147,9 @@ missingRows <- nrow(rawData) - nrow(cleanData)
 
 Rows with NAs:
 
-```{r echo=FALSE}
-missingRows
+
+```
+## [1] 2304
 ```
 
 Below is the code that imputs missing values to the data set:
@@ -105,7 +159,8 @@ Below is the code that imputs missing values to the data set:
 3. Pasting the imputed data with the data frame created after NA values were removed from the original data
 4. Ordering the data by date and interval
 
-```{r}
+
+```r
 #imputing data
 inputData <- filter(rawData, !complete.cases(rawData))
 inputData$steps <- replace(inputData$steps, inputData$interval %in% sumByInterval$interval, sumByInterval$mean_steps)
@@ -115,9 +170,24 @@ finalData$date <- as.Date(finalData$date)
 head(finalData, n=10)
 ```
 
+```
+##        steps       date interval
+## 1  1.7169811 2012-10-01        0
+## 2  0.3396226 2012-10-01        5
+## 3  0.1320755 2012-10-01       10
+## 4  0.1509434 2012-10-01       15
+## 5  0.0754717 2012-10-01       20
+## 6  2.0943396 2012-10-01       25
+## 7  0.5283019 2012-10-01       30
+## 8  0.8679245 2012-10-01       35
+## 9  0.0000000 2012-10-01       40
+## 10 1.4716981 2012-10-01       45
+```
+
 Histogram:
 
-```{r}
+
+```r
 #histogram
 sumByDay2 <- finalData %>% group_by(date) %>% summarize(total_steps=sum(steps), mean_steps=mean(steps), median_steps=median(steps[steps>0]))
 
@@ -126,25 +196,36 @@ ggplot(sumByDay2, aes(x=sumByDay2$date, y=sumByDay2$total_steps), width=sumByDay
   xlab('') + ylab('Mean steps') 
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
 Comparison before and after imputing data (all data with imputed values vs raw data without NAs):
 
-```{r}
 
+```r
 v1 <- c(mean(finalData$steps), median(finalData$steps), sum(finalData$steps))
 v1
 ```
 
-```{r}
+```
+## [1]     37.3826      0.0000 656737.5094
+```
 
+
+```r
 v2 <- c(mean(cleanData$steps), median(cleanData$steps), sum(cleanData$steps))
 v2
+```
+
+```
+## [1]     37.3826      0.0000 570608.0000
 ```
 
 Above, we can see, that median and mean are the same but the total steps count is significantly higher. The median is the same, since there are a lot of 0 in the data. The mean is the same, since I used means for imputing data. 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+
+```r
 ### ARE THERE DIFFERENCES IN ACTIVITY PATTERNS BETWEEN WEEKDAYS AND WEEKENDS ###
 
 sumByDay3 <- finalData %>% group_by(date) %>% summarize(total_steps=sum(steps), mean_steps=mean(steps), median_steps=median(steps[steps>0])) %>%
@@ -153,4 +234,6 @@ sumByDay3 <- finalData %>% group_by(date) %>% summarize(total_steps=sum(steps), 
 
 ggplot(sumByDay3, aes(date, mean_steps)) + geom_line() + facet_grid(day_type ~ .) + xlab('') + ylab('Mean steps')
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
 
